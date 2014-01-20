@@ -7,8 +7,10 @@
 //
 
 #import "ViewController.h"
-#define FRIEND_LIST @"http://192.168.211.166:3000/?name=all"
-#define PROVIDER_ADDRESS @"http://http://192.168.211.166:3000"
+
+
+#define FRIEND_LIST @"http://192.168.2.1:3000/?name=all"
+#define PROVIDER_ADDRESS @"http://192.168.2.1:3000"
 
 
 @interface ViewController ()
@@ -68,7 +70,7 @@
 -(void)parseFriendList
 {
     NSURL *url = [NSURL URLWithString:FRIEND_LIST];
-    NSData *data = [NSData dataWithContentsOfFile:(NSString*)url];
+    NSData *data = [NSData dataWithContentsOfURL:url];
 
     __autoreleasing NSError *error = nil;
     NSDictionary *result  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
