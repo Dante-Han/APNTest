@@ -7,15 +7,52 @@
 //
 
 #import "AppDelegate.h"
-
+#import <AudioToolbox/AudioToolbox.h>
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+
+    UIRemoteNotificationType notiType = UIRemoteNotificationTypeBadge|
+    UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
+
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notiType];
+
     return YES;
 }
-							
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"remote notificatin : %@", [userInfo description]);
+    NSDictionary *apsInfo = userInfo[@"aps"];
+    NSString *alert = apsInfo[@"alert"];
+    NSLog(@"Received pudh alert : %@", alert);
+
+    NSString *sound = apsInfo[@"sound"];
+    NSLog(@"Received push sound: %@", sound);
+
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+    NSString *badge  = apsInfo[@"badge"];
+    NSLog(@"Received Push badge : %@",badge);
+    application.applicationIconBadgeNumber = [badge integerValue];
+
+
+}
+
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    NSLog(@"Success to register APN : %@",deviceToken);
+}
+
+-(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"Fail to register APN:%@", [error localizedDescription]);
+
+}
+
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
